@@ -2,6 +2,7 @@
 #define GAME_H
 #define Special_Key_Offset 255
 #define KEY_ESCAPE 27
+#define KEY_ENTER  '\r'
 class Player;
 #include "../Player/Player.h"
 #include "../Types/Types.h" 

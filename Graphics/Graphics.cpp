@@ -47,6 +47,19 @@ void display() {
 }
 
 
+void Draw_Image(const char* path,float x,float y,float scale ){
+    int w,h;
+    std::vector<BYTE> img = GetImageData(path, w, h);
+    if(img.empty()) {
+        printf("error loading image %s\n",path);
+    }
+    glRasterPos2f(x,y);
+
+    glPixelZoom(scale, scale);
+    glDrawPixels(w, h, GL_RGBA, GL_UNSIGNED_BYTE, img.data());
+    glPixelZoom(1.0f, 1.0f);
+}
+
 //Button -------------------------------------------------------------
 Button::Button(Vector2D pos, float width, float height, std::string text, Color baseColor, Color selectedColor)
     : Object(pos, width, height, baseColor.r, baseColor.g, baseColor.b), text(text), selectedColor(selectedColor)

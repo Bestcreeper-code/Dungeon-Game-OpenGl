@@ -117,35 +117,36 @@ Game::Game(int width, int height) {
     gameInstance = this;    
     currroom = map.rooms[0];
 
-    ((ComboInputUi*)menus[COMBO_INPUT_MENU])->Start(std::vector<unsigned short>{
-            'd',
-            GLUT_KEY_UP + Special_Key_Offset,
-            'k',
-            GLUT_KEY_LEFT + Special_Key_Offset,
-            'w',
-            'r',
-            GLUT_KEY_DOWN + Special_Key_Offset,
-            'a',
-            'o',
-            GLUT_KEY_RIGHT + Special_Key_Offset,
-            'e',
-            'z',
-            'c',
-            GLUT_KEY_UP + Special_Key_Offset,
-            'm',
-            GLUT_KEY_LEFT + Special_Key_Offset,
-            't',
-            GLUT_KEY_DOWN + Special_Key_Offset,
-            'b',
-            GLUT_KEY_RIGHT + Special_Key_Offset
-        },60*20
+    // ((ComboInputUi*)menus[COMBO_INPUT_MENU])->Start(std::vector<unsigned short>{
+    //         'd',
+    //         GLUT_KEY_UP + Special_Key_Offset,
+    //         'k',
+    //         GLUT_KEY_LEFT + Special_Key_Offset,
+    //         'w',
+    //         'r',
+    //         GLUT_KEY_DOWN + Special_Key_Offset,
+    //         'a',
+    //         'o',
+    //         GLUT_KEY_RIGHT + Special_Key_Offset,
+    //         'e',
+    //         'z',
+    //         'c',
+    //         GLUT_KEY_UP + Special_Key_Offset,
+    //         'm',
+    //         GLUT_KEY_LEFT + Special_Key_Offset,
+    //         't',
+    //         GLUT_KEY_DOWN + Special_Key_Offset,
+    //         'b',
+    //         GLUT_KEY_RIGHT + Special_Key_Offset
+    //     },60*20
 
-    );
+    // );
 
 }
 
 void Game::Update() {
     UpdateTimers();
+    
     if (!paused) {
         if (!inFight){
             currroom->update(keys);

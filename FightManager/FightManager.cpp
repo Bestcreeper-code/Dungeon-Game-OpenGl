@@ -55,9 +55,8 @@ void PlayerFighter::PlayTurn(){
         selectedButton = (selectedButton - 1 + buttons.size()) % buttons.size();
     } else if (Game::keys[GLUT_KEY_RIGHT+Special_Key_Offset] && Game::keyTimers[GLUT_KEY_RIGHT+Special_Key_Offset] == 1) {
         selectedButton = (selectedButton + 1) % buttons.size();
-    } else if (Game::keys['\n'] && Game::keyTimers['\n'] == 1) {
+    } else if (Game::keys[KEY_ENTER] && Game::keyTimers[KEY_ENTER] == 1) {
         if (selectedButton == 0) {
-            // Attack logic
             Game::fightManager->KillEnemy(1);
         } else if (selectedButton == 1) {
             // Defend logic
@@ -79,6 +78,7 @@ FightManager::FightManager(){
 void FightManager::StartFight(std::vector<EnemyFighter> enemiesList,PlayerFighter player)  {
     enemies = enemiesList;
     playerCharacter = player;
+    Game::NoInventory = true;
 }
 
 void FightManager::Update(){
