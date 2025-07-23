@@ -9,8 +9,12 @@ void Fighter::Draw(Vector2D pos){
     drawText(pos.x,pos.y+0.1,std::to_string(health));
 }
 
-void Fighter::PlayTurn(){
+int Fighter::PlayTurn(){
 
+}
+
+void Fighter::Hurt(int amount){
+    health -= amount;
 }
 // Enemy -------------------------------
 
@@ -20,8 +24,16 @@ EnemyFighter::EnemyFighter(){
 // void EnemyFighter::Draw(Vector2D pos){
 
 // }
-void EnemyFighter::PlayTurn(){
-    Game::fightManager->playerturn = true;
+int EnemyFighter::PlayTurn(){
+    static_cast<ComboInputUi*>(Game::menus[COMBO_INPUT_MENU])->Start(std::vector<unsigned short>{'d','o','d','g','e'},
+        350,
+        [](int value) {
+            Game::fightManager->playerCharacter.Hurt(20-value*3);
+            Game::fightManager->waiting = false;
+            Game::fightManager->playerturn = false;
+        }
+    );
+    
 }
 
 // Player -------------------------------
@@ -37,7 +49,7 @@ PlayerFighter::PlayerFighter(){
 
 // }
 
-void PlayerFighter::PlayTurn(){
+int PlayerFighter::PlayTurn(){
     
     Button attackButton = buttons[0];
     Button defendButton = buttons[1];
@@ -66,10 +78,9 @@ void PlayerFighter::PlayTurn(){
             static_cast<ComboInputUi*>(Game::menus[COMBO_INPUT_MENU])->Start(std::vector<unsigned short>{'h','e','l','l','o'},
                 300,
                 [](int value) {
-                    Game::fightManager->DamageEnemy(value,1);
+                    Game::fightManager->DamageEnemy(value*10,1);
                     Game::fightManager->waiting = false;
                     Game::fightManager->playerturn = false;
-
                 }
             );
         } else if (selectedButton == 1) {
@@ -124,16 +135,14 @@ void FightManager::NewTurn(){
 
 
 void FightManager::KillEnemy(int pos){
-    pos--;
     if (pos >= 0 && pos < enemies.size()) {
         enemies.erase(enemies.begin() + pos);
     }
 }
 
 void FightManager::DamageEnemy(int damage,int pos){
-    pos--;
     if (pos >= 0 && pos < enemies.size()) {
-       enemies[pos].health -= damage;
-       if (enemies[pos].health <0)KillEnemy(pos); 
+       enemies[pos].Hurt(damage);
+       if (enemies[pos].health <=0)KillEnemy(pos); 
     }
 }

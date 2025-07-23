@@ -7,14 +7,15 @@ public:
     int health;
     float resistance;
     virtual void Draw(Vector2D pos);
-    virtual void PlayTurn();
+    virtual int PlayTurn();
+    virtual void Hurt(int amount);
 };
 
 class EnemyFighter : public Fighter
 {
 public:
     EnemyFighter();
-    void PlayTurn() override;
+    int PlayTurn() override;
     // void Draw(Vector2D pos) override;
 };
 
@@ -23,7 +24,7 @@ class PlayerFighter : public Fighter
 public:
     std::vector<Button> buttons;
     PlayerFighter();
-    void PlayTurn() override;
+    int PlayTurn() override;
     // void Draw(Vector2D pos) override;
 private:
     char selectedButton = 0;
@@ -40,11 +41,12 @@ public:
     void KillEnemy(int pos);
     
     bool waiting;
+    int enemyTurnIndex = 0; 
     bool playerturn;
     bool show;
+    PlayerFighter playerCharacter;
 private:
     std::vector<EnemyFighter> enemies;
-    PlayerFighter playerCharacter;
 };
 
 

@@ -77,6 +77,6 @@ int main(int argc, char** argv) {
 
 
 // git add .
-// git commit -m "Your commit message here"
-// git push origin main
+// git commit -m "message"
+// git push origin master:main
 
