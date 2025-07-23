@@ -5,7 +5,7 @@ OBJ_DIR := build
 
 INCLUDES := -I"./libs/freeglut/include" -I"./"
 LIBDIRS := -L"./libs/freeglut/lib/x64"
-LIBS := -lopengl32 -lglu32 -lfreeglut
+LIBS := -lopengl32 -lglu32 -lfreeglut -lwinmm 
 
 SRCS := Main.cpp \
         Gameplay/Game.cpp \
@@ -38,7 +38,7 @@ release: $(EXE)
 
 # Link executable from object files
 $(EXE): $(OBJS)
-	@$(CXX) $^ -o $@ $(LIBDIRS) $(LIBS)
+	@$(CXX) $^ -o $@ $(LIBDIRS) $(LIBS) 
 
 # Compile .cpp files into build folder, create subdirs as needed
 $(OBJ_DIR)/%.o: %.cpp
