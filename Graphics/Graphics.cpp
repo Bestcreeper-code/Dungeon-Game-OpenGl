@@ -10,7 +10,7 @@
 
 
 std::unordered_map<std::string, GLuint> textureCache;
-
+ 
 void initGraphics(int width, int height) {
 
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
