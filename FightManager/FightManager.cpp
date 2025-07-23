@@ -6,6 +6,7 @@ std::vector<Vector2D> possibleEnemyPos = std::vector<Vector2D>{Vector2D{-0.5,0.5
 
 void Fighter::Draw(Vector2D pos){
     drawRect(pos.x,pos.y,0.05,0.05);
+    drawText(pos.x,pos.y+0.1,std::to_string(health));
 }
 
 void Fighter::PlayTurn(){
@@ -14,13 +15,13 @@ void Fighter::PlayTurn(){
 // Enemy -------------------------------
 
 EnemyFighter::EnemyFighter(){
-
+    health = 100;
 }
 // void EnemyFighter::Draw(Vector2D pos){
 
 // }
 void EnemyFighter::PlayTurn(){
-
+    Game::fightManager->playerturn = true;
 }
 
 // Player -------------------------------
@@ -51,13 +52,26 @@ void PlayerFighter::PlayTurn(){
     attackButton.Draw();
     defendButton.Draw();
     healButton.Draw();
-    if (Game::keys[GLUT_KEY_LEFT+Special_Key_Offset] && Game::keyTimers[GLUT_KEY_LEFT+Special_Key_Offset] == 1) {
+    if (Game::keys[GLUT_KEY_LEFT + Special_Key_Offset] && Game::keyTimers[GLUT_KEY_LEFT + Special_Key_Offset] == 1) {
         selectedButton = (selectedButton - 1 + buttons.size()) % buttons.size();
-    } else if (Game::keys[GLUT_KEY_RIGHT+Special_Key_Offset] && Game::keyTimers[GLUT_KEY_RIGHT+Special_Key_Offset] == 1) {
+    }
+    
+    else if (Game::keys[GLUT_KEY_RIGHT + Special_Key_Offset] && Game::keyTimers[GLUT_KEY_RIGHT + Special_Key_Offset] == 1) {
         selectedButton = (selectedButton + 1) % buttons.size();
-    } else if (Game::keys[KEY_ENTER] && Game::keyTimers[KEY_ENTER] == 1) {
+    }
+    
+    else if (Game::keys[KEY_ENTER] && Game::keyTimers[KEY_ENTER] == 1) {
         if (selectedButton == 0) {
-            Game::fightManager->KillEnemy(1);
+            Game::fightManager->waiting = true;
+            static_cast<ComboInputUi*>(Game::menus[COMBO_INPUT_MENU])->Start(std::vector<unsigned short>{'h','e','l','l','o'},
+                300,
+                [](int value) {
+                    Game::fightManager->DamageEnemy(value,1);
+                    Game::fightManager->waiting = false;
+                    Game::fightManager->playerturn = false;
+
+                }
+            );
         } else if (selectedButton == 1) {
             // Defend logic
             health += 10; 
@@ -72,17 +86,20 @@ void PlayerFighter::PlayTurn(){
 
 // Fightmanager -----------------------------------------------------------------------------
 FightManager::FightManager(){
-
+    waiting = false;
+    show = false;
+    playerturn = true;
 }
 
 void FightManager::StartFight(std::vector<EnemyFighter> enemiesList,PlayerFighter player)  {
     enemies = enemiesList;
     playerCharacter = player;
     Game::NoInventory = true;
+    show = true;
 }
 
 void FightManager::Update(){
-    if (Game::inFight) {
+    if (Game::inFight && show) {
         glColor3ub(255,255,0);
         playerCharacter.Draw(Vector2D{0,-0.5});
         for (int i = 0;i<enemies.size();i++){
@@ -105,9 +122,18 @@ void FightManager::NewTurn(){
     }
 }
 
+
 void FightManager::KillEnemy(int pos){
     pos--;
     if (pos >= 0 && pos < enemies.size()) {
         enemies.erase(enemies.begin() + pos);
+    }
+}
+
+void FightManager::DamageEnemy(int damage,int pos){
+    pos--;
+    if (pos >= 0 && pos < enemies.size()) {
+       enemies[pos].health -= damage;
+       if (enemies[pos].health <0)KillEnemy(pos); 
     }
 }

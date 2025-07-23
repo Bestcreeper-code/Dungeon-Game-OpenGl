@@ -81,33 +81,29 @@ ComboInputUi::ComboInputUi() {
     }
 }
 
-void ComboInputUi::Start(std::vector<unsigned short> combo,int time) {
+void ComboInputUi::Start(std::vector<unsigned short> combo,int time,void (*callback)(int)) {
     correct_inputs_amount = 0;
     combodata = combo;
     Shown = true;    
     time_left = time;
     start_max_time = time;
+    callback_func = callback;
     Game::paused = true;
     Game::NoInventory = true;
 }
 void ComboInputUi::update(){
     if (Shown){
-        if (correct_inputs_amount >= combodata.size()) {
+        if (correct_inputs_amount >= combodata.size() || time_left <=0) {
+            // if (time_left <=0)//some sound or smth
             Shown = false;
             Game::paused = false;
             Game::NoInventory = false;
-            return;
-        } else if (time_left <=0){
-            //play some sound or smth
-            Shown = false;
-            Game::paused = false;
-            Game::NoInventory = false;
+            callback_func(correct_inputs_amount);
             return;
         }
-        if (Game::keyTimers[combodata[correct_inputs_amount]] > 1) {
+        if (Game::keyTimers[combodata[correct_inputs_amount]] > 0) {
             correct_inputs_amount++;
-            PlaySoundEffect("Res/Sounds/Correct_Input.wav");
-            
+            PlaySoundEffect("Res/Sounds/Correct_Input.wav");            
         }
         time_left--;
         displayMenu();

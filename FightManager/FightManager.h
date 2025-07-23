@@ -1,7 +1,7 @@
 #ifndef FIGHTMANAGER_H
 #define FIGHTMANAGER_H
 #include "../Graphics/Graphics.h"
-class Fighter
+class Fighter 
 {
 public:
     int health;
@@ -36,8 +36,10 @@ public:
     void StartFight(std::vector<EnemyFighter> enemiesList, PlayerFighter player);
     void Update();
     void NewTurn();
+    void DamageEnemy(int damage, int pos);
     void KillEnemy(int pos);
     
+    bool waiting;
     bool playerturn;
     bool show;
 private:

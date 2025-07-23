@@ -27,13 +27,14 @@ class ComboInputUi : public Menu
 {
 public:
     ComboInputUi();
-    void Start(std::vector<unsigned short> combo, int time);
+    void Start(std::vector<unsigned short> combo, int time, void (*callback)(int));
     void displayMenu() override;
     void update() override;
 private:
     std::vector<unsigned short> combodata;    
     int correct_inputs_amount = 0;
     int time_left = 0;
+    void (*callback_func)(int);
     int start_max_time = 0;
 };
 
