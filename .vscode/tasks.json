@@ -1,0 +1,84 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build Game.exe",
+            "type": "shell",
+            "command": "g++",
+            "args": [
+                "Main.cpp",
+                "Gameplay/Game.cpp",
+                "Graphics/Graphics.cpp",
+                "Types/Types.cpp",
+                "Tiles/Tiles.cpp",
+                "Ui/Menus/Menus.cpp",
+                "Ui/Messages/Messages.cpp",
+                "Player/Player.cpp",
+                "FightManager/FightManager.cpp",
+
+                "-o", "Game.exe",
+                
+                "-I", "C:/Users/odayl/Desktop/Codetests/Dungeon Game GL",
+                "-I", "C:/Libraries/freeglut/include",
+                
+                "-L", "C:/Libraries/freeglut/lib/x64",
+                
+                // "-lwinmm", win sounds
+                "-lopengl32",
+                "-lglu32",
+                "-lfreeglut",
+
+                "-Os",
+                "-s",
+                "-fdata-sections",
+                "-ffunction-sections",
+                "-fno-exceptions",
+                "-fno-rtti"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": ["$gcc"],
+            "detail": "Optimized build for Game.exe"
+        },
+        {
+            "label": "run Game.exe",
+            "type": "shell",
+            "command": "./Game.exe",
+            "group": "build",
+            "dependsOn": "build Game.exe",
+            "problemMatcher": []
+        },
+        {
+            "label": "test build Game.exe",
+            "type": "shell",
+            "command": "g++",
+            "args": [
+                "Main.cpp",
+                "Gameplay/Game.cpp",
+                "Graphics/Graphics.cpp",
+                "Types/Types.cpp",
+                "Tiles/Tiles.cpp",
+                "Ui/Menus/Menus.cpp",
+                "Ui/Messages/Messages.cpp",
+                "Player/Player.cpp",
+                "-o", "Game.exe",
+                "-I", "C:/Users/odayl/Desktop/Codetests/Dungeon Game GL",
+                "-I", "C:/Libraries/freeglut/include",
+                "-L", "C:/Libraries/freeglut/lib/x64",
+                "-lopengl32",
+                "-lglu32",
+                "-lfreeglut",
+                "-O0",
+                "-g"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "detail": "Fast debug build for Game.exe"
+        }
+
+    ]
+}
