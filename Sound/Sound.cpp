@@ -1,92 +1,84 @@
+#define MINIAUDIO_IMPLEMENTATION
+#include "../Miniaudio/miniaudio.h"
 #include "Sound.h"
 #include <stdio.h>
-#define MINIAUDIO_IMPLEMENTATION
-#include "miniaudio.h" // Include the MiniAudio header if it's not included already
-
-static AudioPlayer player;
-
-
-void audio_player_uninit(ma_device* placeholder) {
-    if (player.isInitialized) {
-        
-        ma_device_stop(&player.device);
-        ma_device_uninit(&player.device);
-        ma_decoder_uninit(&player.decoder);
-        player.isInitialized = 0;
-        printf("Audio player uninitialized.\n");
-    }
-}
+#include <pthread.h>
+#include <unistd.h>  // for usleep
+#include <stdlib.h>
 
 
-void data_callback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount) {
-    ma_decoder* pDecoder = (ma_decoder*)pDevice->pUserData;
-    ma_result result = ma_decoder_read_pcm_frames(pDecoder, pOutput, frameCount, NULL);
+void* PlaySoundEffect_Thread(void* arg)
+{
+    SoundThreadData* data = (SoundThreadData*)arg;
 
-    if (result != MA_SUCCESS) {
-        printf("Error reading PCM frames.\n");
-        return;  
-    }
-
-    (void)pInput;  
-}
-
-
-int PlaySoundEffect(const char* filepath) {
     ma_result result;
+    ma_engine engine;
+    ma_sound sound;
 
-    
-    if (player.isInitialized) {
-        printf("Audio player is already initialized.\n");
-        return 1;  // Already playing, return early
-    }
-
-    // Initialize decoder
-    result = ma_decoder_init_file(filepath, NULL, &player.decoder);
+    result = ma_engine_init(NULL, &engine);
     if (result != MA_SUCCESS) {
-        printf("Failed to initialize decoder for %s\n", filepath);
-        return -1;
+        printf("Failed to initialize audio engine.\n");
+        free(data);
+        return NULL;
     }
 
-    // Set up playback device config
-    ma_device_config deviceConfig = ma_device_config_init(ma_device_type_playback);
-    deviceConfig.playback.format   = player.decoder.outputFormat;
-    deviceConfig.playback.channels = player.decoder.outputChannels;
-    deviceConfig.sampleRate        = player.decoder.outputSampleRate;
-    deviceConfig.dataCallback      = data_callback;
-    deviceConfig.pUserData         = &player.decoder;  // Pass the decoder to the callback
-    deviceConfig.stopCallback      = audio_player_uninit;
-
-    // Initialize the playback device
-    result = ma_device_init(NULL, &deviceConfig, &player.device);
+    result = ma_sound_init_from_file(&engine, data->path, 0, NULL, NULL, &sound);
     if (result != MA_SUCCESS) {
-        printf("Failed to initialize the playback device for %s\n", filepath);
-        ma_decoder_uninit(&player.decoder);
-        return -2;
+        printf("Failed to load sound file.\n");
+        ma_engine_uninit(&engine);
+        free(data);
+        return NULL;
     }
 
-    // Start the playback device
-    result = ma_device_start(&player.device);
+    result = ma_sound_start(&sound);
     if (result != MA_SUCCESS) {
-        printf("Failed to start the playback device for %s\n", filepath);
-        ma_device_uninit(&player.device);
-        ma_decoder_uninit(&player.decoder);
-        return -3;
+        printf("Failed to start sound.\n");
+        ma_sound_uninit(&sound);
+        ma_engine_uninit(&engine);
+        free(data);
+        return NULL;
     }
 
-    
-    player.isInitialized = 1;
-    printf("Playing sound: %s\n", filepath);
-    return 0;  // Success
+    while (ma_sound_is_playing(&sound) && data->play) {
+        usleep(100 * 1000);
+    }
+
+    if (!data->play) {
+        ma_sound_stop(&sound);
+    }
+
+    ma_sound_uninit(&sound);
+    ma_engine_uninit(&engine);
+    free(data);
+    return NULL;
 }
 
 
-void StopSoundEffect() {
-    if (player.isInitialized) {
-        audio_player_uninit(NULL); 
-        printf("Sound stopped.\n");
-    } else {
-        printf("No sound is playing.\n");
+
+SoundThreadData* PlaySoundEffect(const char* path)
+{
+    pthread_t thread_id;
+    SoundThreadData* data = (SoundThreadData*)malloc(sizeof(SoundThreadData));
+    if (!data) {
+        printf("Memory allocation failed.\n");
+        return NULL;
     }
+    data->path = path;
+    data->play = true;
+
+    if (pthread_create(&thread_id, NULL, PlaySoundEffect_Thread, data) != 0) {
+        printf("Failed to create thread.\n");
+        free(data);
+        return NULL;
+    }
+
+    pthread_detach(thread_id);
+    return data;
 }
 
-
+void StopSoundEffect(SoundThreadData* data)
+{
+    if (data) {
+        data->play = false;
+    }
+}

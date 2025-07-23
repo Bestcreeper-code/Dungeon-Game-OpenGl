@@ -22,8 +22,8 @@ SRCS := Main.cpp \
 # Convert source file paths to object file paths in build folder
 OBJS := $(SRCS:%.cpp=$(OBJ_DIR)/%.o)
 
-CXXFLAGS_DEBUG := -O0 -g
-CXXFLAGS_RELEASE := -Os -s -fdata-sections -ffunction-sections -fno-exceptions -fno-rtti
+CXXFLAGS_DEBUG := -std=c++17 -O0 -g
+CXXFLAGS_RELEASE := -std=c++17 -Os -s -fdata-sections -ffunction-sections -fno-exceptions -fno-rtti
 
 .PHONY: all debug release
 

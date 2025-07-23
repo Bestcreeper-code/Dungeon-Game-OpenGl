@@ -4,14 +4,13 @@
 #include "../Miniaudio/miniaudio.h"
 
 typedef struct {
-    ma_decoder decoder;
-    ma_device device;
-    int isInitialized;
-} AudioPlayer;
+    const char* path;
+    volatile bool play;  // use volatile to prevent optimization issues
+} SoundThreadData;
 
 
 
-int PlaySoundEffect(const char* filepath);
-void StopSoundEffect();
-void audio_player_uninit(ma_device* placeholder)
+
+SoundThreadData* PlaySoundEffect(const char* path);
+void StopSoundEffect(SoundThreadData* data);
 #endif
