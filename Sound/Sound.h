@@ -1,8 +1,7 @@
 #ifndef SOUND_H
 #define SOUND_H
 #include <string>
-#define MINIAUDIO_IMPLEMENTATION
-#include "miniaudio.h"
+#include "../Miniaudio/miniaudio.h"
 
 typedef struct {
     ma_decoder decoder;
@@ -11,6 +10,8 @@ typedef struct {
 } AudioPlayer;
 
 
-int PlaySoundEffect(AudioPlayer* player ,const char* filepath);
 
+int PlaySoundEffect(const char* filepath);
+void StopSoundEffect();
+void audio_player_uninit(ma_device* placeholder)
 #endif

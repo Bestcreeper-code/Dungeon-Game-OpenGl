@@ -4,6 +4,7 @@
 #include "../../Player/Player.h"
 #include <filesystem>
 #include "../Messages/Messages.h"
+#include "../../Sound/Sound.h"
 namespace fs = std::filesystem;
 
 void Menu::displayMenu() {
@@ -90,7 +91,6 @@ void ComboInputUi::Start(std::vector<unsigned short> combo,int time) {
 }
 void ComboInputUi::update(){
     if (Shown){
-        displayMenu();
         if (correct_inputs_amount >= combodata.size()) {
             Shown = false;
             Game::paused = false;
@@ -105,8 +105,11 @@ void ComboInputUi::update(){
         }
         if (Game::keyTimers[combodata[correct_inputs_amount]] > 1) {
             correct_inputs_amount++;
+            PlaySoundEffect("Res/Sounds/Correct_Input.wav");
+            play
         }
         time_left--;
+        displayMenu();
     }   
 }
 void ComboInputUi::displayMenu(){
