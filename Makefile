@@ -16,7 +16,8 @@ SRCS := Main.cpp \
         Ui/Messages/Messages.cpp \
         Player/Player.cpp \
         FightManager/FightManager.cpp \
-        Imagemanager/ImageManager.cpp
+        Imagemanager/ImageManager.cpp \
+        Sound/Sound.cpp
 
 # Convert source file paths to object file paths in build folder
 OBJS := $(SRCS:%.cpp=$(OBJ_DIR)/%.o)
