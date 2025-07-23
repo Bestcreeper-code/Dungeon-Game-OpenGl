@@ -5,6 +5,7 @@ class Fighter
 {
 public:
     int health;
+    int max_health;
     float resistance;
     virtual void Draw(Vector2D pos);
     virtual int PlayTurn();

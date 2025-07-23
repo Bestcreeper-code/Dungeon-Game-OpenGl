@@ -153,8 +153,8 @@ void Game::Update() {
             player->update();
         }
         messageManager->Update();
-        fightManager->Update();
     }
+    fightManager->Update();
     for (Menu* menu : menus) {
         menu->update();
     }
@@ -195,6 +195,7 @@ void Game::HandleMainInputs() {
     }
     if (keyTimers['r']){
         inFight = !inFight;
+        fightManager->show = true;
     }
     return;
 }

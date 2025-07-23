@@ -10,7 +10,7 @@ void Fighter::Draw(Vector2D pos){
 }
 
 int Fighter::PlayTurn(){
-
+    return 0;
 }
 
 void Fighter::Hurt(int amount){
@@ -20,26 +20,30 @@ void Fighter::Hurt(int amount){
 
 EnemyFighter::EnemyFighter(){
     health = 100;
+    max_health = 100;
 }
 // void EnemyFighter::Draw(Vector2D pos){
 
 // }
-int EnemyFighter::PlayTurn(){
-    static_cast<ComboInputUi*>(Game::menus[COMBO_INPUT_MENU])->Start(std::vector<unsigned short>{'d','o','d','g','e'},
+int EnemyFighter::PlayTurn() {
+    static_cast<ComboInputUi*>(Game::menus[COMBO_INPUT_MENU])->Start(
+        std::vector<unsigned short>{'d','o','d','g','e'},
         350,
         [](int value) {
-            Game::fightManager->playerCharacter.Hurt(20-value*3);
+            Game::fightManager->playerCharacter.Hurt(20 - value * 3);
             Game::fightManager->waiting = false;
-            Game::fightManager->playerturn = false;
+            Game::fightManager->enemyTurnIndex++;
         }
     );
-    
+    return 0;  
 }
+
 
 // Player -------------------------------
 
 PlayerFighter::PlayerFighter(){
     health = 100;
+    max_health = 100;
     resistance = 0;
     buttons.push_back(Button{Vector2D{-0.75,-0.9},0.4f,0.2f,"Attack", Color{255,0,0}, Color{255,180,180}});
     buttons.push_back(Button{Vector2D{-0.25,-0.9},0.4f,0.2f,"Defend", Color{0,0,255}, Color{180,180,255}});
@@ -86,11 +90,14 @@ int PlayerFighter::PlayTurn(){
         } else if (selectedButton == 1) {
             // Defend logic
             health += 10; 
+            health = health <= max_health? health:max_health;
         } else if (selectedButton == 2) {
             // Heal logic
             health += 20;
+            health = health <= max_health? health:max_health;
         }
     }
+    return 0;
 }
     
 
@@ -109,19 +116,28 @@ void FightManager::StartFight(std::vector<EnemyFighter> enemiesList,PlayerFighte
     show = true;
 }
 
-void FightManager::Update(){
-    if (Game::inFight && show) {
-        glColor3ub(255,255,0);
-        playerCharacter.Draw(Vector2D{0,-0.5});
-        for (int i = 0;i<enemies.size();i++){
-            glColor3ub(255,0,0);
-            enemies[i].Draw(possibleEnemyPos[i]);
-        }
-        if(playerturn) playerCharacter.PlayTurn(); 
-        else {
-            for (auto& enemy : enemies) {
-                enemy.PlayTurn();
-            }
+void FightManager::Update() {
+    if (!(Game::inFight && show)) return;
+
+    // Draw all characters
+    glColor3ub(255,255,0);
+    playerCharacter.Draw(Vector2D{0,-0.5});
+    for (int i = 0; i < enemies.size(); i++) {
+        glColor3ub(255,0,0);
+        enemies[i].Draw(possibleEnemyPos[i]);
+    }
+
+    if (waiting || Game::paused) return; 
+
+    if (playerturn) {
+        playerCharacter.PlayTurn(); 
+    } else {
+        if (enemyTurnIndex < enemies.size()) {
+            waiting = true; 
+            enemies[enemyTurnIndex].PlayTurn();
+        } else {
+            playerturn = true;
+            enemyTurnIndex = 0; 
         }
     }
 }

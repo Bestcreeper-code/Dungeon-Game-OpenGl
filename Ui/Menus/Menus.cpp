@@ -101,7 +101,7 @@ void ComboInputUi::update(){
             callback_func(correct_inputs_amount);
             return;
         }
-        if (Game::keyTimers[combodata[correct_inputs_amount]] > 0) {
+        if (Game::keyTimers[combodata[correct_inputs_amount]] == 1) {
             correct_inputs_amount++;
             PlaySoundEffect("Res/Sounds/Correct_Input.wav");            
         }
