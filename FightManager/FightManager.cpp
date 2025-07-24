@@ -28,15 +28,18 @@ EnemyFighter::EnemyFighter(){
 
 // }
 int EnemyFighter::PlayTurn() {
-    static_cast<ComboInputUi*>(Game::menus[COMBO_INPUT_MENU])->Start(
-        std::vector<unsigned short>{'d','o','d','g','e'},
-        350,
-        [](int value) {
-            Game::fightManager->playerCharacter.Hurt(20 - value * 3);
-            Game::fightManager->waiting = false;
-            Game::fightManager->enemyTurnIndex++;
-        }
-    );
+    if(Game::fightManager->combo_mode){
+        char combosize =3+rand()%4;
+        static_cast<ComboInputUi*>(Game::menus[COMBO_INPUT_MENU])->Start(
+            Generate_Random_Key_Combo(combosize),
+            350,
+            [](int value) {
+                Game::fightManager->playerCharacter.Hurt(20 - value * 3);
+                Game::fightManager->waiting = false;
+                Game::fightManager->enemyTurnIndex++;
+            }
+        );
+    }
     return 0;  
 }
 

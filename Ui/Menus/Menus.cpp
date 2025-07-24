@@ -103,7 +103,8 @@ void ComboInputUi::update(){
         }
         if (Game::keyTimers[combodata[correct_inputs_amount]] == 1) {
             correct_inputs_amount++;
-            PlaySoundEffect("Res/Sounds/Correct_Input.wav");            
+            PlaySoundEffect("Res/Sounds/Correct_Input.wav");     
+                   
         }
         time_left--;
         displayMenu();
