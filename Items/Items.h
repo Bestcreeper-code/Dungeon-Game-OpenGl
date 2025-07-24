@@ -9,6 +9,14 @@ struct Item {
     
 };
 
+struct ArmorItem : Item{
+    int armor;
+};
+
+struct WeaponItem : Item{
+    int damage;
+};
+
 const std::vector<Item> all_items = std::vector<Item>{
     Item{"Sword","Tha Sword"},
     Item{"Shield","Shield xD"},

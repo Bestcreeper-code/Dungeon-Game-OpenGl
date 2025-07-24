@@ -179,3 +179,19 @@ void ComboInputUi::displayMenu(){
         index++;
     }
 }
+
+const std::vector<unsigned short> possible_combo_keys{
+    'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
+    GLUT_KEY_DOWN+Special_Key_Offset,
+    GLUT_KEY_UP+Special_Key_Offset,
+    GLUT_KEY_RIGHT+Special_Key_Offset,
+    GLUT_KEY_LEFT+Special_Key_Offset,
+};
+
+std::vector<unsigned short> Generate_Random_Key_Combo(char size){
+    std::vector<unsigned short> combo;
+    for(int i =0;i<size;i++){
+        combo.push_back(possible_combo_keys[rand() % possible_combo_keys.size()]);
+    }
+    return combo;
+}

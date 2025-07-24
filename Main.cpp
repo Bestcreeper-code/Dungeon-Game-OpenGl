@@ -4,7 +4,7 @@
 #include "globals.h"
 // #include <mmsystem.h>
 
-int frameRate = 60;
+int frameRate = GAME_FRAMERATE;
 int windowWidth = 800,windowHeight = 800;
 
 Game* game = new Game(windowWidth, windowHeight);

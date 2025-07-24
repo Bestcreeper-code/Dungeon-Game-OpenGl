@@ -1,6 +1,8 @@
 #ifndef FIGHTMANAGER_H
 #define FIGHTMANAGER_H
 #include "../Graphics/Graphics.h"
+#include "../Items/Items.h"
+
 class Fighter 
 {
 public:
@@ -24,6 +26,8 @@ class PlayerFighter : public Fighter
 {
 public:
     std::vector<Button> buttons;
+    WeaponItem weapon = WeaponItem{.damage=10};
+    ArmorItem armor;
     PlayerFighter();
     int PlayTurn() override;
     // void Draw(Vector2D pos) override;
@@ -42,6 +46,7 @@ public:
     void KillEnemy(int pos);
     
     bool waiting;
+    bool combo_mode;
     int enemyTurnIndex = 0; 
     bool playerturn;
     bool show;

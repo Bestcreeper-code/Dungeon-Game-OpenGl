@@ -1,12 +1,13 @@
 #include "FightManager.h"
 #include "../Gameplay/Game.h"
+#include "../globals.h"
 #include <algorithm>
 std::vector<Vector2D> possibleEnemyPos = std::vector<Vector2D>{Vector2D{-0.5,0.5},Vector2D{0,0.5},Vector2D{0.5,0.5}};
 
 
 void Fighter::Draw(Vector2D pos){
     drawRect(pos.x,pos.y,0.05,0.05);
-    drawText(pos.x,pos.y+0.1,std::to_string(health));
+    drawText(pos.x,pos.y+0.1,std::to_string(health),GLUT_BITMAP_HELVETICA_18);
 }
 
 int Fighter::PlayTurn(){
@@ -68,6 +69,13 @@ int PlayerFighter::PlayTurn(){
     attackButton.Draw();
     defendButton.Draw();
     healButton.Draw();
+    Color textcolor = Game::fightManager->combo_mode? Color{0,255,0} : Color{255,0,0};
+    glColor3ub(textcolor.r,textcolor.g,textcolor.b);
+    if(Game::fightManager->combo_mode){
+        drawText(-0.8,-0.5,"Combo Mode Activated",GLUT_BITMAP_HELVETICA_18);
+    } else{
+        drawText(-0.8,-0.5,"Press Tab to Switch to Combo Mode",GLUT_BITMAP_HELVETICA_18);
+    }
     if (Game::keys[GLUT_KEY_LEFT + Special_Key_Offset] && Game::keyTimers[GLUT_KEY_LEFT + Special_Key_Offset] == 1) {
         selectedButton = (selectedButton - 1 + buttons.size()) % buttons.size();
     }
@@ -75,18 +83,31 @@ int PlayerFighter::PlayTurn(){
     else if (Game::keys[GLUT_KEY_RIGHT + Special_Key_Offset] && Game::keyTimers[GLUT_KEY_RIGHT + Special_Key_Offset] == 1) {
         selectedButton = (selectedButton + 1) % buttons.size();
     }
+
+    else if (Game::keys['\t'] && Game::keyTimers['\t'] == 1) {
+        Game::fightManager->combo_mode = !Game::fightManager->combo_mode;
+    }
     
     else if (Game::keys[KEY_ENTER] && Game::keyTimers[KEY_ENTER] == 1) {
         if (selectedButton == 0) {
-            Game::fightManager->waiting = true;
-            static_cast<ComboInputUi*>(Game::menus[COMBO_INPUT_MENU])->Start(std::vector<unsigned short>{'h','e','l','l','o'},
-                300,
-                [](int value) {
-                    Game::fightManager->DamageEnemy(value*10,1);
-                    Game::fightManager->waiting = false;
-                    Game::fightManager->playerturn = false;
-                }
-            );
+            //combo mode on -> combo ui
+            if(Game::fightManager->combo_mode){
+                Game::fightManager->waiting = true;
+                char combosize =3+rand()%4;
+                static_cast<ComboInputUi*>(Game::menus[COMBO_INPUT_MENU])->Start(Generate_Random_Key_Combo(combosize),
+                    combosize*GAME_FRAMERATE,
+                    [](int value) {
+                        char size = static_cast<ComboInputUi*>(Game::menus[COMBO_INPUT_MENU])->Combosize();
+                        int attack = Game::fightManager->playerCharacter.weapon.damage; 
+                        Game::fightManager->DamageEnemy((float(attack)*1.3f/float(size))*value,0);
+                        Game::fightManager->waiting = false;
+                        Game::fightManager->playerturn = false;
+                    }
+                );
+            } else {
+                
+            }
+
         } else if (selectedButton == 1) {
             // Defend logic
             health += 10; 
@@ -107,6 +128,7 @@ FightManager::FightManager(){
     waiting = false;
     show = false;
     playerturn = true;
+    combo_mode = false;
 }
 
 void FightManager::StartFight(std::vector<EnemyFighter> enemiesList,PlayerFighter player)  {

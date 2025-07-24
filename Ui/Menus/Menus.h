@@ -30,6 +30,7 @@ public:
     void Start(std::vector<unsigned short> combo, int time, void (*callback)(int));
     void displayMenu() override;
     void update() override;
+    char Combosize(){return combodata.size();};
 private:
     std::vector<unsigned short> combodata;    
     int correct_inputs_amount = 0;
@@ -37,5 +38,7 @@ private:
     void (*callback_func)(int);
     int start_max_time = 0;
 };
+
+std::vector<unsigned short> Generate_Random_Key_Combo(char size);
 
 #endif
