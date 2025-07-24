@@ -2,6 +2,7 @@
 #include "../Gameplay/Game.h"
 #include "../globals.h"
 #include <algorithm>
+#include "../AnimationManager/AnimationManager.h"
 std::vector<Vector2D> possibleEnemyPos = std::vector<Vector2D>{Vector2D{-0.5,0.5},Vector2D{0,0.5},Vector2D{0.5,0.5}};
 
 
@@ -90,7 +91,7 @@ int PlayerFighter::PlayTurn(){
     
     else if (Game::keys[KEY_ENTER] && Game::keyTimers[KEY_ENTER] == 1) {
         if (selectedButton == 0) {
-            //combo mode on -> combo ui
+            //Combo mode on -> combo ui------------------------
             if(Game::fightManager->combo_mode){
                 Game::fightManager->waiting = true;
                 char combosize =3+rand()%4;
@@ -105,9 +106,12 @@ int PlayerFighter::PlayTurn(){
                     }
                 );
             } else {
-                
+                int attack = Game::fightManager->playerCharacter.weapon.damage; 
+                Game::fightManager->DamageEnemy(rand()%attack,0);
+                Game::fightManager->playerturn = false;
             }
-
+            
+            PlayAnimation("Slash",possibleEnemyPos[0].x,possibleEnemyPos[0].y,2,6,false);
         } else if (selectedButton == 1) {
             // Defend logic
             health += 10; 
@@ -145,7 +149,7 @@ void FightManager::Update() {
     glColor3ub(255,255,0);
     playerCharacter.Draw(Vector2D{0,-0.5});
     for (int i = 0; i < enemies.size(); i++) {
-        glColor3ub(255,0,0);
+        glColor3ub(0,100,0);
         enemies[i].Draw(possibleEnemyPos[i]);
     }
 

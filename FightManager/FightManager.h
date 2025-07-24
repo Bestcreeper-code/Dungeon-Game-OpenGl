@@ -50,8 +50,8 @@ public:
     int enemyTurnIndex = 0; 
     bool playerturn;
     bool show;
+    
     PlayerFighter playerCharacter;
-private:
     std::vector<EnemyFighter> enemies;
 };
 

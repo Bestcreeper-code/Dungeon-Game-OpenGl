@@ -10,6 +10,7 @@
 #include "../Player/Player.h"
 #include "../Ui/Messages/Messages.h"
 #include "../FightManager/FightManager.h"
+#include "../AnimationManager/AnimationManager.h"
 
 Game* Game::gameInstance = nullptr;
 Tilemap* Game::currroom = nullptr;
@@ -116,6 +117,7 @@ Game::Game(int width, int height) {
     fightManager->StartFight(std::vector<EnemyFighter>{EnemyFighter{},EnemyFighter{},EnemyFighter{}},PlayerFighter{});  // -------------
     gameInstance = this;    
     currroom = map.rooms[0];
+    LoadAnimations();
 
     // ((ComboInputUi*)menus[COMBO_INPUT_MENU])->Start(std::vector<unsigned short>{
     //         'd',
@@ -159,6 +161,8 @@ void Game::Update() {
         menu->update();
     }
     HandleMainInputs();
+    UpdateAnimations();
+    RenderAnimations();
 }
 
 bool Game::changeRoom(Vector2D Room) {
