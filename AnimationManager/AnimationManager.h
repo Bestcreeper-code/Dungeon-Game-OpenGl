@@ -20,7 +20,7 @@ struct PlayingAnimation {
 
 // Function declarations matching your .cpp:
 void LoadAnimations();
-void PlayAnimation(const std::string& name, float x, float y, float size, float fps, bool loop = false);
+PlayingAnimation* PlayAnimation(const std::string& name, float x, float y, float size, float fps, bool loop = false);
 void RenderAnimations();
 void UpdateAnimations();
 void EndAnimation(const std::string& name);

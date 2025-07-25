@@ -47,7 +47,7 @@ void display() {
 }
 
 
-void Draw_Image(const char* path,float x,float y,float scale ){
+void Draw_Image(const char* path,float x,float y,float scale, GLenum format ){
     int w,h;
     std::vector<BYTE> img = GetImageData(path, w, h);
     if(img.empty()) {
@@ -56,7 +56,7 @@ void Draw_Image(const char* path,float x,float y,float scale ){
     glRasterPos2f(x,y);
 
     glPixelZoom(scale, scale);
-    glDrawPixels(w, h, GL_RGBA, GL_UNSIGNED_BYTE, img.data());
+    glDrawPixels(w, h, format, GL_UNSIGNED_BYTE, img.data());
     glPixelZoom(1.0f, 1.0f);
 }
 

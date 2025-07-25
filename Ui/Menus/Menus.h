@@ -27,7 +27,7 @@ class ComboInputUi : public Menu
 {
 public:
     ComboInputUi();
-    void Start(std::vector<unsigned short> combo, int time, void (*callback)(int));
+    void Start(std::vector<unsigned short> combo, int time, void (*callback)(int,void*),void* callback_args, size_t args_size);
     void displayMenu() override;
     void update() override;
     char Combosize(){return combodata.size();};
@@ -35,7 +35,8 @@ private:
     std::vector<unsigned short> combodata;    
     int correct_inputs_amount = 0;
     int time_left = 0;
-    void (*callback_func)(int);
+    void (*callback_func)(int,void*);
+    void* callbackdata;
     int start_max_time = 0;
 };
 

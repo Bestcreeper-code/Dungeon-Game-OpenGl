@@ -112,6 +112,7 @@ FightManager* Game::fightManager = new FightManager();
 
 std::vector<Menu*> Game::menus = { new Inventory(), new ComboInputUi() };
 
+
 Game::Game(int width, int height) {
     
     fightManager->StartFight(std::vector<EnemyFighter>{EnemyFighter{},EnemyFighter{},EnemyFighter{}},PlayerFighter{});  // -------------
@@ -146,8 +147,10 @@ Game::Game(int width, int height) {
 
 }
 
+
 void Game::Update() {
     UpdateTimers();
+
     
     if (!paused) {
         if (!inFight){
@@ -163,6 +166,8 @@ void Game::Update() {
     HandleMainInputs();
     UpdateAnimations();
     RenderAnimations();
+    
+    
 }
 
 bool Game::changeRoom(Vector2D Room) {

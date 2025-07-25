@@ -63,7 +63,7 @@ void Inventory::update() {
 
 
 
-ComboInputUi::ComboInputUi() {
+ComboInputUi::ComboInputUi() : callbackdata(nullptr)  {
     Shown = false;
  
     fs::path directory = "Res/Images/ComboImages"; 
@@ -81,13 +81,18 @@ ComboInputUi::ComboInputUi() {
     }
 }
 
-void ComboInputUi::Start(std::vector<unsigned short> combo,int time,void (*callback)(int)) {
+void ComboInputUi::Start(std::vector<unsigned short> combo,int time,void (*callback)(int,void*),void* callback_args,size_t args_size) {
     correct_inputs_amount = 0;
     combodata = combo;
     Shown = true;    
     time_left = time;
     start_max_time = time;
     callback_func = callback;
+
+    if(callback_args && args_size){
+        callbackdata = malloc(args_size);
+        memcpy(callbackdata,callback_args,args_size);
+    }
     Game::paused = true;
     Game::NoInventory = true;
 }
@@ -98,7 +103,8 @@ void ComboInputUi::update(){
             Shown = false;
             Game::paused = false;
             Game::NoInventory = false;
-            callback_func(correct_inputs_amount);
+            callback_func(correct_inputs_amount,callbackdata);
+            free(callbackdata);
             return;
         }
         if (Game::keyTimers[combodata[correct_inputs_amount]] == 1) {

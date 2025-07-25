@@ -10,11 +10,13 @@
 #include "../Ui/Messages/Messages.h"
 
 
-EmptyTile::EmptyTile(Vector2D pos, float w, float h) : Tile(pos, w, h, 0, 20, 20, 20){}
+EmptyTile::EmptyTile(Vector2D pos, float w, float h) : Tile(pos, w, h, 0, 20, 20, 20){sprite_name="Res/Images/Tiles/Empty_Tile.png";}
 
-WallTile::WallTile(Vector2D pos, float w, float h) : Tile(pos, w, h, 1, 128, 128, 128){}
+WallTile::WallTile(Vector2D pos, float w, float h) : Tile(pos, w, h, 1, 128, 128, 128){sprite_name="Res/Images/Tiles/Wall_Tile.png";}
 
 Chest::Chest(Vector2D pos, float w, float h,char amountOfItems) : Tile(pos, w, h, 2, 145, 92, 6){
+    sprite_name="Res/Images/Tiles/Chest_Tile.png";
+
     for (char i = 0;i<amountOfItems;i++)  
     {
         int itemIndex = std::rand() % ITEMS_H::all_items.size();

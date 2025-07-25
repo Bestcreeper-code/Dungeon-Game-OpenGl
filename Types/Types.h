@@ -31,6 +31,7 @@ public:
     
     class Tile : public Object {
     public:
+        std::string sprite_name = "Res/Images/ComboImages/x.png";
         unsigned char Type;
         Tile(Vector2D pos, float w, float h,unsigned char tiletype, unsigned char r, unsigned char g, unsigned char b);
         void Draw() override;

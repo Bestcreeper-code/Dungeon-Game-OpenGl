@@ -33,12 +33,19 @@ int EnemyFighter::PlayTurn() {
         static_cast<ComboInputUi*>(Game::menus[COMBO_INPUT_MENU])->Start(
             Generate_Random_Key_Combo(combosize),
             350,
-            [](int value) {
-                Game::fightManager->playerCharacter.Hurt(20 - value * 3);
+            [](int value,void* arg) {
+                int damage = *((int*)arg);
+                Game::fightManager->playerCharacter.Hurt(damage - value * 3);
                 Game::fightManager->waiting = false;
                 Game::fightManager->enemyTurnIndex++;
-            }
+            },
+            &damage,
+            sizeof(damage)
         );
+    }else{
+        Game::fightManager->playerCharacter.Hurt(damage+(rand()%7-3));
+        Game::fightManager->waiting = false;
+        Game::fightManager->enemyTurnIndex++;
     }
     return 0;  
 }
@@ -100,13 +107,15 @@ int PlayerFighter::PlayTurn(){
                 char combosize =3+rand()%4;
                 static_cast<ComboInputUi*>(Game::menus[COMBO_INPUT_MENU])->Start(Generate_Random_Key_Combo(combosize),
                     combosize*GAME_FRAMERATE,
-                    [](int value) {
+                    [](int value,void* arg) {
                         char size = static_cast<ComboInputUi*>(Game::menus[COMBO_INPUT_MENU])->Combosize();
                         int attack = Game::fightManager->playerCharacter.weapon.damage; 
                         Game::fightManager->DamageEnemy((float(attack)*1.3f/float(size))*value,0);
                         Game::fightManager->waiting = false;
                         Game::fightManager->playerturn = false;
-                    }
+                    },
+                    NULL,
+                    0
                 );
             } else {
                 int attack = Game::fightManager->playerCharacter.weapon.damage; 

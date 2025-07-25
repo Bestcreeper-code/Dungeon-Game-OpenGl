@@ -15,6 +15,8 @@ struct ArmorItem : Item{
 
 struct WeaponItem : Item{
     int damage;
+    float attackComplexity;
+    
 };
 
 const std::vector<Item> all_items = std::vector<Item>{
@@ -22,11 +24,7 @@ const std::vector<Item> all_items = std::vector<Item>{
     Item{"Shield","Shield xD"},
     Item{"Gold Coin","Gold"}
 };
-// class Item{
-// public:
-//     std::string name;
-//     std::string description;
-// };
+
 
 
 

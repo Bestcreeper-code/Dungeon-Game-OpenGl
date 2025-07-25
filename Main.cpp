@@ -2,7 +2,7 @@
 #include "Graphics/Graphics.h"
 #include "Gameplay/Game.h"
 #include "globals.h"
-// #include <mmsystem.h>
+
 
 int frameRate = GAME_FRAMERATE;
 int windowWidth = 800,windowHeight = 800;

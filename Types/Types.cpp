@@ -49,9 +49,9 @@ Tile::Tile(Vector2D pos, float w, float h,unsigned char tiletype, unsigned char 
     Type = tiletype;
 }
 void Tile::Draw() {
-    glColor3ub(r, g, b);
-    drawRect(position.x, position.y, width, height);
-    
+    Draw_Image(sprite_name.c_str(),position.x,position.y,width*27);
+//     glColor3ub(r, g, b);
+//     drawRect(position.x, position.y, width, height);
 }
 void Tile::update(bool* keys) {
     Draw();

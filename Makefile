@@ -24,7 +24,7 @@ SRCS := Main.cpp \
 OBJS := $(SRCS:%.cpp=$(OBJ_DIR)/%.o)
 
 CXXFLAGS_DEBUG := -std=c++17 -O0 -g
-CXXFLAGS_RELEASE := -std=c++17 -Os -s -fdata-sections -ffunction-sections -fno-exceptions -fno-rtti
+CXXFLAGS_RELEASE := -std=c++17 -Os -s -fdata-sections -ffunction-sections -Wall -Werror -g
 
 .PHONY: all debug release
 
@@ -32,7 +32,7 @@ all: debug
 
 debug: CXXFLAGS := $(CXXFLAGS_DEBUG)
 debug: $(EXE)
-	$(EXE)
+	
 
 release: CXXFLAGS := $(CXXFLAGS_RELEASE)
 release: $(EXE)

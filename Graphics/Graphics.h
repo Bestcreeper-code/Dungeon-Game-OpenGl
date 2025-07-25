@@ -11,7 +11,7 @@ void initGraphics(int width, int height);
 void drawRect(float x, float y, float width, float height);
 void display();
 void drawText(float x, float y, std::string text, void* font = GLUT_BITMAP_HELVETICA_18);
-void Draw_Image(const char* path,float x,float y,float scale );
+void Draw_Image(const char* path,float x,float y,float scale, GLenum format = GL_RGBA );
 
 class Button : public Object {
 public:

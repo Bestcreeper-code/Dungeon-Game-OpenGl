@@ -19,6 +19,8 @@ class EnemyFighter : public Fighter
 public:
     EnemyFighter();
     int PlayTurn() override;
+
+    int damage = 10;
     // void Draw(Vector2D pos) override;
 };
 
