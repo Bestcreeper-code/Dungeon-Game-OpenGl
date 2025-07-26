@@ -3,6 +3,8 @@
 #include "../Graphics/Graphics.h"
 #include "../Items/Items.h"
 
+extern std::vector<Vector2D> possibleEnemyPos;
+
 class Fighter 
 {
 public:
@@ -21,7 +23,7 @@ public:
     int PlayTurn() override;
 
     int damage = 10;
-    // void Draw(Vector2D pos) override;
+    void Draw(Vector2D pos) override;
 };
 
 class PlayerFighter : public Fighter

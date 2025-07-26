@@ -24,9 +24,11 @@ EnemyFighter::EnemyFighter(){
     health = 100;
     max_health = 100;
 }
-// void EnemyFighter::Draw(Vector2D pos){
-
-// }
+void EnemyFighter::Draw(Vector2D pos){
+    drawRect(pos.x,pos.y,0.05,0.05);
+    drawText(pos.x,pos.y+0.1,std::to_string(health),GLUT_BITMAP_HELVETICA_18);
+    drawText(pos.x,pos.y+0.2,std::to_string(damage),GLUT_BITMAP_HELVETICA_18);
+}
 int EnemyFighter::PlayTurn() {
     if(Game::fightManager->combo_mode){
         char combosize =3+rand()%4;
@@ -34,8 +36,11 @@ int EnemyFighter::PlayTurn() {
             Generate_Random_Key_Combo(combosize),
             350,
             [](int value,void* arg) {
+                char combosize = static_cast<ComboInputUi*>(Game::menus[COMBO_INPUT_MENU])->Combosize();
                 int damage = *((int*)arg);
-                Game::fightManager->playerCharacter.Hurt(damage - value * 3);
+
+                PlayAnimation("Slash",0,-0.5,2,6,false);
+                Game::fightManager->playerCharacter.Hurt(damage - (damage * 0.8 )*((float)value/(float)combosize) );// FIX by adding the armor def instead of 0.8 
                 Game::fightManager->waiting = false;
                 Game::fightManager->enemyTurnIndex++;
             },
@@ -100,8 +105,9 @@ int PlayerFighter::PlayTurn(){
     }
     
     else if (Game::keys[KEY_ENTER] && Game::keyTimers[KEY_ENTER] == 1) {
-        if (selectedButton == 0) {
+        if (selectedButton == 0) {//Attack logic
             //Combo mode on -> combo ui------------------------
+            int enemy_target = 0;
             if(Game::fightManager->combo_mode){
                 Game::fightManager->waiting = true;
                 char combosize =3+rand()%4;
@@ -109,27 +115,30 @@ int PlayerFighter::PlayTurn(){
                     combosize*GAME_FRAMERATE,
                     [](int value,void* arg) {
                         char size = static_cast<ComboInputUi*>(Game::menus[COMBO_INPUT_MENU])->Combosize();
+
                         int attack = Game::fightManager->playerCharacter.weapon.damage; 
-                        Game::fightManager->DamageEnemy((float(attack)*1.3f/float(size))*value,0);
+                        int enemy_index = *(static_cast<int*>(arg));
+                        
+                        PlayAnimation("Slash",possibleEnemyPos[enemy_index].x,possibleEnemyPos[enemy_index].y,2,6,false);
+                        Game::fightManager->DamageEnemy((float(attack)*1.3f/float(size))*value,enemy_index);
+                        
                         Game::fightManager->waiting = false;
                         Game::fightManager->playerturn = false;
                     },
-                    NULL,
-                    0
+                    &enemy_target,
+                    sizeof(int)
                 );
             } else {
                 int attack = Game::fightManager->playerCharacter.weapon.damage; 
-                Game::fightManager->DamageEnemy(rand()%attack,0);
+                Game::fightManager->DamageEnemy(rand()%attack,enemy_target);
                 Game::fightManager->playerturn = false;
             }
             
-            PlayAnimation("Slash",possibleEnemyPos[0].x,possibleEnemyPos[0].y,2,6,false);
-        } else if (selectedButton == 1) {
-            // Defend logic
+            
+        } else if (selectedButton == 1) {// Defend logic
             health += 10; 
             health = health <= max_health? health:max_health;
-        } else if (selectedButton == 2) {
-            // Heal logic
+        } else if (selectedButton == 2) {// Heal logic
             health += 20;
             health = health <= max_health? health:max_health;
         }

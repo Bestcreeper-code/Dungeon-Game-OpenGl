@@ -81,7 +81,7 @@ ComboInputUi::ComboInputUi() : callbackdata(nullptr)  {
     }
 }
 
-void ComboInputUi::Start(std::vector<unsigned short> combo,int time,void (*callback)(int,void*),void* callback_args,size_t args_size) {
+void ComboInputUi::Start(std::vector<unsigned short> combo,int time,void (*callback)(int hit_amount,void* callb_args),void* callback_args,size_t args_size) {
     correct_inputs_amount = 0;
     combodata = combo;
     Shown = true;    

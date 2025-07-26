@@ -198,7 +198,7 @@ void Game::HandleMainInputs() {
             Cleanup();
         }
         glColor3ub(255, 255, 255);
-        std::string dots((int)(keyTimers[KEY_ESCAPE]+10)/60,'.');
+        std::string dots((int)(keyTimers[KEY_ESCAPE]+10)/GAME_FRAMERATE,'.');
         std::string message = "Hold ESC to exit" + dots;
         drawText(-1, 1-((float)24/windowHeight), message.c_str(), GLUT_BITMAP_TIMES_ROMAN_24);
     }
